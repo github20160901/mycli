@@ -65,8 +65,8 @@ def step_query_select_123456(context):
         +--------+\r
         | 123456 |\r
         +--------+\r
-        1 row in set\r
         """), timeout=5)
+    wrappers.expect_exact(context, '1 row in set', timeout=2)
 
 
 @when(u'we notee output')

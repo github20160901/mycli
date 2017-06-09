@@ -530,15 +530,18 @@ class MyCli(object):
                     else:
                         max_width = None
 
-                    formatted = self.format_output(title, cur, headers, status,
-                                                   special.is_expanded_output(),
-                                                   max_width)
+                    formatted = self.format_output(
+                        title, cur, headers, special.is_expanded_output(),
+                        max_width)
 
                     t = time() - start
                     try:
                         if result_count > 0:
                             self.echo('')
-                        self.output(formatted)
+                        try:
+                            self.output(formatted, status)
+                        except KeyboardInterrupt:
+                            pass
                         if special.is_timing_enabled():
                             self.echo('Time: %0.03fs' % t)
                     except KeyboardInterrupt:
@@ -664,7 +667,7 @@ class MyCli(object):
         self.log_output(s)
         click.secho(s, **kwargs)
 
-    def output(self, output):
+    def output(self, output, status=None):
         """Output text to stdout or a pager command.
 
         The message will be logged in the audit log, if enabled. The
@@ -678,6 +681,8 @@ class MyCli(object):
         margin = self.get_reserved_space() + self.get_prompt(self.prompt_format).count('\n') + 1
         if special.is_timing_enabled():
             margin += 1
+        if status:
+            margin += 1 + status.count('\n')
 
         fits = True
         buf = []
@@ -703,6 +708,10 @@ class MyCli(object):
             else:
                 for line in buf:
                     click.secho(line)
+
+        if status:
+            self.log_output(status)
+            click.secho(status)
 
     def configure_pager(self):
         # Provide sane defaults for less if they are empty.
@@ -779,11 +788,11 @@ class MyCli(object):
         results = self.sqlexecute.run(query)
         for result in results:
             title, cur, headers, status = result
-            output = self.format_output(title, cur, headers, None)
+            output = self.format_output(title, cur, headers)
             for line in output:
                 click.echo(line, nl=new_line)
 
-    def format_output(self, title, cur, headers, status, expanded=False,
+    def format_output(self, title, cur, headers, expanded=False,
                       max_width=None):
         expanded = expanded or self.formatter.format_name == 'vertical'
         output = []
@@ -804,9 +813,6 @@ class MyCli(object):
             if text_type(formatted):
                 formatted = formatted.splitlines()
             output = itertools.chain(output, formatted)
-
-        if status:  # Only print the status if it's not None.
-            output = itertools.chain(output, [status])
 
         return output
 
