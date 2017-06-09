@@ -11,6 +11,7 @@ Features:
 * Add special command to show create table statement. (Thanks: [Ryan Smith])
 * Display all result sets returned by stored procedures (Thanks: [Thomas Roten]).
 * Add current time to prompt options (Thanks: [Thomas Roten]).
+* Output via generator. (Thanks: Dick Marinus).
 
 Bug Fixes:
 ----------
