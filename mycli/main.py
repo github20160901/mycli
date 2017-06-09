@@ -41,6 +41,8 @@ from .encodingutils import utf8tounicode
 from .lexer import MyCliLexer
 from .__init__ import __version__
 
+from mycli.encodingutils import text_type
+
 import itertools
 
 click.disable_unicode_literals_warning = True
@@ -801,7 +803,7 @@ class MyCli(object):
                 formatted = self.formatter.format_output(
                     rows, headers, format_name='vertical')
 
-            if isinstance(formatted, str) or isinstance(formatted, unicode):
+            if text_type(formatted):
                 formatted = formatted.splitlines()
             output = itertools.chain(output, formatted)
 
