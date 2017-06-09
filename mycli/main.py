@@ -37,11 +37,9 @@ from .completion_refresher import CompletionRefresher
 from .config import (write_default_config, get_mylogin_cnf_path,
                      open_mylogin_cnf, read_config_files, str_to_bool)
 from .key_bindings import mycli_bindings
-from .encodingutils import utf8tounicode
+from .encodingutils import utf8tounicode, text_type
 from .lexer import MyCliLexer
 from .__init__ import __version__
-
-from mycli.encodingutils import text_type
 
 import itertools
 
