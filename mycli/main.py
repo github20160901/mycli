@@ -810,7 +810,7 @@ class MyCli(object):
                 formatted = self.formatter.format_output(
                     rows, headers, format_name='vertical')
 
-            if text_type(formatted):
+            if isinstance(formatted, text_type):
                 formatted = formatted.splitlines()
             output = itertools.chain(output, formatted)
 
